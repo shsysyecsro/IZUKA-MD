@@ -1,0 +1,66 @@
+const { cmd } = require('../command');
+const config = require('../config');
+
+const startTime = Date.now();
+
+const formatRuntime = (ms) => {
+  const totalSeconds = Math.floor(ms / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  return `${hours}h ${minutes}m ${seconds}s`;
+};
+
+cmd({
+  pattern: "bug-menu",
+  alias: ['bugmenu'],
+  desc: "Show the bug command menu",
+  category: "bug",
+  filename: __filename
+}, async (m, sock) => {
+  const prefix = config.PREFIX;
+  const now = Date.now();
+  const runtime = formatRuntime(now - startTime);
+
+  let profilePictureUrl = 'https://files.catbox.moe/ia5bih.png';
+  try {
+    const pp = await sock.profilePictureUrl(m.sender, 'image');
+    if (pp) profilePictureUrl = pp;
+  } catch (e) {
+    console.error("Failed to fetch profile picture:", e);
+  }
+
+  const text = `
+╭───────────────⭓
+│ ʙᴏᴛ : *IZUKA-MD*
+│ ᴘʀᴇғɪx : ${prefix}
+│ ᴍᴇɴᴜ : 𝗕𝗨𝗚-𝗠𝗘𝗡𝗨
+│ ᴠᴇʀ : *1.𝟶.𝟶*
+╰───────────────⭓
+➤ izuka-kill
+➤ izuka-freeze
+➤ izuka-blast
+➤ ios-kill
+➤ x-force
+────────────────────
+⚡ 𝐃𝐀𝐖𝐄𝐍𝐒 𝘽𝙊𝙔 𝙏𝙀𝘾𝙃 ⚡
+────────────────────
+`;
+
+  await sock.sendMessage(
+    m.from,
+    {
+      image: { url: profilePictureUrl },
+      caption: text.trim(),
+      contextInfo: {
+        forwardingScore: 5,
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+          newsletterName: "IZUKA-MD",
+          newsletterJid: "120363397722863547@newsletter",
+        },
+      },
+    },
+    { quoted: m }
+  );
+});

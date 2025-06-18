@@ -42,7 +42,7 @@ await conn.sendMessage(from, {
         forwardingScore: 999,
         isForwarded: true,
         forwardedNewsletterMessageInfo: {
-            newsletterJid: '120363398101781980@newsletter', // ou ton JID actuel
+            newsletterJid: '0029VbCHd5V1dAw132PB7M1B@newsletter', // ou ton JID actuel
             newsletterName: 'IZUKA-MD',
             serverMessageId: 143
         }

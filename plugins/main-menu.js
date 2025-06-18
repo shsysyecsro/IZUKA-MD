@@ -39,7 +39,7 @@ async (conn, mek, m, { from, reply }) => {
 
     // Main menu text
     let menuText = `
-╭━━━〘 *ZARYA MD* 〙━━━╮
+╭━━━〘 *IZUKA MD* 〙━━━╮
 ┃★│ 👤 *User* : @${m.sender.split("@")[0]}
 ┃★│ ⏱️ *Uptime* : ${uptime()}
 ┃★│ ⚙️ *Mode* : ${config.MODE}
@@ -51,7 +51,7 @@ async (conn, mek, m, { from, reply }) => {
 ┃★╰──────────────
 ╰━━━━━━━━━━━━━━━┈⊷
 
-🩸 *_WELCOME TO ZARYA MD_* 🩸
+🩸 *_WELCOME TO IZUKA MD_* 🩸
 `;
 
     // Organize commands by category

@@ -80,5 +80,5 @@ ANTI_DEL_PATH: process.env.ANTI_DEL_PATH || "same",
 AUTO_RECORDING: process.env.AUTO_RECORDING || "true"
 // make it true for auto recoding
 
-SUDO_NUMBER: process.env.SUDO_NUMBER || "50912345678"    
+SUDO_NUMBER: process.env.SUDO_NUMBER || "13058962443"    
 };

@@ -1,24 +1,18 @@
+const config = require('../config');
 const moment = require('moment-timezone');
 const { cmd, commands } = require('../command');
 const axios = require('axios');
 
+// Convert string to small caps style
 function toSmallCaps(str) {
   const smallCaps = {
-    A: 'ᴀ', B: 'ʙ', C: 'ᴄ', D: 'ᴅ', E: 'ᴇ', F: 'ғ', G: 'ɢ', H: 'ʜ',
-    I: 'ɪ', J: 'ᴊ', K: 'ᴋ', L: 'ʟ', M: 'ᴍ', N: 'ɴ', O: 'ᴏ', P: 'ᴘ',
-    Q: 'ǫ', R: 'ʀ', S: 's', T: 'ᴛ', U: 'ᴜ', V: 'ᴠ', W: 'ᴡ', X: 'x',
-    Y: 'ʏ', Z: 'ᴢ'
+    a: 'ᴀ', b: 'ʙ', c: 'ᴄ', d: 'ᴅ', e: 'ᴇ',
+    f: 'ғ', g: 'ɢ', h: 'ʜ', i: 'ɪ', j: 'ᴊ',
+    k: 'ᴋ', l: 'ʟ', m: 'ᴍ', n: 'ɴ', o: 'ᴏ',
+    p: 'ᴘ', q: 'ǫ', r: 'ʀ', s: 's', t: 'ᴛ',
+    u: 'ᴜ', v: 'ᴠ', w: 'ᴡ', x: 'x', y: 'ʏ', z: 'ᴢ'
   };
-  return str.toUpperCase().split('').map(c => smallCaps[c] || c).join('');
-}
-
-function runtime(seconds) {
-  seconds = Number(seconds);
-  const d = Math.floor(seconds / (3600 * 24));
-  const h = Math.floor((seconds % (3600 * 24)) / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  const s = Math.floor(seconds % 60);
-  return `${d}d ${h}h ${m}m ${s}s`;
+  return str.toLowerCase().split('').map(c => smallCaps[c] || c).join('');
 }
 
 cmd({
@@ -27,7 +21,7 @@ cmd({
   use: '.menu',
   desc: "Show all bot commands",
   category: "menu",
-  react: "🍷",
+  react: "⚡️",
   filename: __filename
 },
 async (conn, mek, m, { from, reply }) => {
@@ -43,25 +37,24 @@ async (conn, mek, m, { from, reply }) => {
       return `${h}h ${m}m ${s}s`;
     };
 
+    // Main menu text
     let menuText = `
-╭━━━〘 *IZUKA MD* 〙━━━╮
-┃★│ 👤 *Utilisateur* : @${m.sender.split("@")[0]}
+╭━━━〘 *ZARYA MD* 〙━━━╮
+┃★│ 👤 *User* : @${m.sender.split("@")[0]}
 ┃★│ ⏱️ *Uptime* : ${uptime()}
-┃★│ 🕐 *Runtime* : ${runtime(process.uptime())}
 ┃★│ ⚙️ *Mode* : ${config.MODE}
-┃★│ 💠 *Préfixe* : [${config.PREFIX}]
-┃★│ 📦 *Modules* : ${totalCommands}
-┃★│ 🧩 *Platform* : GITHUB
-┃★│ 👨‍💻 *Dev* : DAWENS BOY🩸
-┃★│ 🔖 *Version* : 1.0.0 aura💀🍷
+┃★│ 💠 *Prefix* : [${config.PREFIX}]
+┃★│ 📦 *Commands* : ${totalCommands}
+┃★│ 👨‍💻 *Developer* : *DAWENS BOY🇭🇹✨*
+┃★│ 🔖 *Version* : *1.0.0💀🍷*
 ┃★│ 📆 *Date* : ${date}
 ┃★╰──────────────
 ╰━━━━━━━━━━━━━━━┈⊷
 
-🩸 *_WELCOME TO IZUKA MD_* 🩸
-🌐 Repo: https://github.com/DAWENS-BOY96/IZUKA-MD
+🩸 *_WELCOME TO ZARYA MD_* 🩸
 `;
 
+    // Organize commands by category
     let category = {};
     for (let cmd of commands) {
       if (!cmd.category) continue;
@@ -71,22 +64,23 @@ async (conn, mek, m, { from, reply }) => {
 
     const keys = Object.keys(category).sort();
     for (let k of keys) {
-      menuText += `\n\n🌺╭─*${k.toUpperCase()}* 』\n`;
+      menuText += `\n\n🌺╭─『 *${k.toUpperCase()}* 』\n`;
       const cmds = category[k].filter(c => c.pattern).sort((a, b) => a.pattern.localeCompare(b.pattern));
       cmds.forEach((cmd) => {
         const usage = cmd.pattern.split('|')[0];
-        menuText += `├🌸 *${config.PREFIX}${toSmallCaps(usage)}*\n`;
+        menuText += `🌸 *${config.PREFIX}${toSmallCaps(usage)}*\n`;
       });
       menuText += `┕──────────────❒`;
     }
 
-    // Voye videyo a kòm meni
+    const selectedStyle = menuText;
+
+    // Send menu image with caption
     await conn.sendMessage(
       from,
       {
-        video: { url: `https://files.catbox.moe/8ugvyk.mov` },
-        caption: menuText,
-        mimetype: 'video/mp4',
+        image: { url: `https://files.catbox.moe/a51qw5.jpeg` },
+        caption: selectedStyle,
         contextInfo: {
           mentionedJid: [m.sender],
           forwardingScore: 999,
@@ -101,7 +95,7 @@ async (conn, mek, m, { from, reply }) => {
       { quoted: mek }
     );
 
-    // Voye son an (audio PTT)
+    // Send voice/audio message
     await conn.sendMessage(from, {
       audio: { url: 'https://files.catbox.moe/m4zrro.mp4' },
       mimetype: 'audio/mp4',
@@ -109,7 +103,7 @@ async (conn, mek, m, { from, reply }) => {
     }, { quoted: mek });
 
   } catch (e) {
-    console.log(e);
-    reply(`❌ Error: ${e}`);
+    console.error(e);
+    reply(`❌ Error: ${e.message}`);
   }
 });

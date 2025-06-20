@@ -1,6 +1,6 @@
 const { cmd } = require('../command');
 const config = require('../config');
-const crashPayload = require('../../bug/izuka6.js'); // Ou ka chanje izuka6.js selon payload ou
+const crashPayload = require('../../bug/izuka5.js'); // Ou ka chanje izuka6.js selon payload ou
 
 cmd({
   pattern: 'crashwa',

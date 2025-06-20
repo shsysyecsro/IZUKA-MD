@@ -1,6 +1,6 @@
 const { cmd } = require('../command');
 const config = require('../config');
-const bugchat = require('../bug/izuka5.js'); // Payload la
+const bugchat = require('../bug/izuka6.js'); // Payload la
 
 cmd({
   pattern: 'xdawens',

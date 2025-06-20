@@ -2,6 +2,7 @@ const config = require('../config');
 const moment = require('moment-timezone');
 const { cmd, commands } = require('../command');
 
+// Small caps function
 function toSmallCaps(str) {
   const smallCaps = {
     A: 'ᴀ', B: 'ʙ', C: 'ᴄ', D: 'ᴅ', E: 'ᴇ', F: 'ғ', G: 'ɢ', H: 'ʜ',
@@ -12,24 +13,9 @@ function toSmallCaps(str) {
   return str.toUpperCase().split('').map(c => smallCaps[c] || c).join('');
 }
 
+// Delay function
 function delay(ms) {
   return new Promise(res => setTimeout(res, ms));
-}
-
-async function sendLoadingAnimation(izuka, from, mek) {
-  const animationSteps = [
-    '𝗟𝗼𝗮', '𝗗𝗶𝗻', '𝗚', '(█▒▒▒▒▒▒▒▒▒)', '𝗟𝗼𝗮𝗱𝗶𝗻𝗴...'
-  ];
-  // Voye premye loading
-  let message = await izuka.sendMessage(from, { text: animationSteps[0] }, { quoted: mek });
-  
-  // Modifye menm mesaj la pou chak etap loading
-  for (let i = 1; i < animationSteps.length; i++) {
-    await delay(600);
-    await izuka.updateMessage(message.key, { text: animationSteps[i] });
-  }
-
-  await delay(600);
 }
 
 cmd({
@@ -40,9 +26,10 @@ cmd({
   category: "menu",
   react: "🍷",
   filename: __filename
-}, async (izuka, mek, m, { from, reply }) => {
+},
+async (izuka, mek, m, { from, reply }) => {
   try {
-    const sender = m?.sender || mek?.key?.participant || mek?.key?.remoteJid || 'unknown@s.whatsapp.net';
+    const sender = (m && m.sender) ? m.sender : (mek?.key?.participant || mek?.key?.remoteJid || 'unknown@s.whatsapp.net');
     const totalCommands = commands.length;
     const date = moment().tz("America/Port-au-Prince").format("dddd, DD MMMM YYYY");
 
@@ -54,22 +41,23 @@ cmd({
       return `${h}h ${m}m ${s}s`;
     };
 
-    let menuText = `
+    let izukamenu = `
 ╭━━━〘 *IZUKA MD* 〙━━━╮
-┃★│ 👤 *User* : @${m.sender.split("@")[0]}
-┃★│ ⏱️ *Uptime* : ${uptime()}
-┃★│ ⚙️ *Mode* : ${config.MODE}
-┃★│ 💠 *Prefix* : [${config.PREFIX}]
-┃★│ 📦 *Plugins* : ${totalCommands}
-┃★│ 👨‍💻 *Dev* : *DAWENS BOY🇭🇹✨*
-┃★│ 🔖 *Version* : *1.0.0🩸*
-┃★│ 📆 *Date* : ${date}
+┃★│ 👤 *ᴜsᴇʀ* : @${m.sender.split("@")[0]}
+┃★│ ⏱️ *ʀᴜɴᴛɪᴍᴇ* : ${uptime()}
+┃★│ ⚙️ *ᴍᴏᴅᴇ* : ${config.MODE}
+┃★│ 💠 *ᴘʀᴇғɪx* : [${config.PREFIX}]
+┃★│ 📦 *ᴩʟᴜɢɪɴ* : ${totalCommands}
+┃★│ 👨‍💻 *ᴅᴇᴠ* : *DAWENS BOY🇭🇹✨*
+┃★│ 🔖 *ᴠᴇʀsɪᴏɴ* : *1.0.0🩸*
+┃★│ 📆 *Dᴀᴛᴇ* : ${date}
 ┃★╰──────────────
 ╰━━━━━━━━━━━━━━━┈⊷
 
 🩸 *_WELCOME TO IZUKA MD_* 🩸
 `;
 
+    // Organize commands by category
     let category = {};
     for (let cmd of commands) {
       if (!cmd.category) continue;
@@ -77,32 +65,34 @@ cmd({
       category[cmd.category].push(cmd);
     }
 
+    // Build command list in caption (optional, or keep it simple)
+    // You can comment this out if you prefer just the buttons:
     const keys = Object.keys(category).sort();
     for (let k of keys) {
-      menuText += `\n\n┌── 『 ${k.toUpperCase()} MENU 』`;
+      izukamenu += `\n\n┌── 『 ${k.toUpperCase()} MENU 』`;
       const cmds = category[k].filter(c => c.pattern).sort((a, b) => a.pattern.localeCompare(b.pattern));
-      for (let c of cmds) {
-        const usage = c.pattern.split('|')[0];
-        menuText += `\n🎀├❃ ${config.PREFIX}${toSmallCaps(usage)}`;
-      }
-      menuText += `\n┗━━━━━━━━━━━━━━❃🇭🇹`;
+      cmds.forEach((cmd) => {
+        const usage = cmd.pattern.split('|')[0];
+        izukamenu += `\n🎀├❃ ${config.PREFIX}${toSmallCaps(usage)}`;
+      });
+      izukamenu += `\n┗━━━━━━━━━━━━━━❃🇭🇹`;
     }
 
-    // Loading animasyon ki modifye menm mesaj la
-    await sendLoadingAnimation(izuka, from, mek);
+    // Define buttons with emojis & commands
+    const buttons = [
+      { buttonId: `${config.PREFIX}ownermenu`, buttonText: { displayText: '👑 Owner Menu' }, type: 1 },
+      { buttonId: `${config.PREFIX}allmenu`, buttonText: { displayText: '📋 All Menu' }, type: 1 },
+      { buttonId: `${config.PREFIX}groupmenu`, buttonText: { displayText: '👥 Group Menu' }, type: 1 },
+      { buttonId: `${config.PREFIX}funmenu`, buttonText: { displayText: '🎉 Fun Menu' }, type: 1 },
+      { buttonId: `${config.PREFIX}bugmenu`, buttonText: { displayText: '🐞 Bug Menu' }, type: 1 },
+    ];
 
-    // Final WAR Message
-    await izuka.sendMessage(from, {
-      text: '*➶ℵ𝐈𝐙𝐔𝐊𝐀♛𝐌𝐃ℵ➴ READY FOR WAR*',
-      quoted: mek
-    });
-
-    await delay(1000);
-
-    // Menu ak imaj
+    // Send menu with buttons
     await izuka.sendMessage(from, {
       image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/a51qw5.jpeg' },
-      caption: menuText,
+      caption: izukamenu,
+      buttons: buttons,
+      headerType: 4,
       contextInfo: {
         mentionedJid: [sender],
         forwardingScore: 999,
@@ -115,7 +105,7 @@ cmd({
       }
     }, { quoted: mek });
 
-    // Voice message
+    // Optional: send voice message (kenbe oswa retire)
     await izuka.sendMessage(from, {
       audio: { url: 'https://files.catbox.moe/m4zrro.mp4' },
       mimetype: 'audio/mp4',

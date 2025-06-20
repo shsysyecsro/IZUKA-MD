@@ -1,31 +1,35 @@
 const config = require('../config');
 const moment = require('moment-timezone');
 const { cmd, commands } = require('../command');
-const axios = require('axios');
 
-// Convert string to small caps style
+// Small caps function
 function toSmallCaps(str) {
   const smallCaps = {
-    a: 'ᴀ', b: 'ʙ', c: 'ᴄ', d: 'ᴅ', e: 'ᴇ',
-    f: 'ғ', g: 'ɢ', h: 'ʜ', i: 'ɪ', j: 'ᴊ',
-    k: 'ᴋ', l: 'ʟ', m: 'ᴍ', n: 'ɴ', o: 'ᴏ',
-    p: 'ᴘ', q: 'ǫ', r: 'ʀ', s: 's', t: 'ᴛ',
-    u: 'ᴜ', v: 'ᴠ', w: 'ᴡ', x: 'x', y: 'ʏ', z: 'ᴢ'
+    A: 'ᴀ', B: 'ʙ', C: 'ᴄ', D: 'ᴅ', E: 'ᴇ', F: 'ғ', G: 'ɢ', H: 'ʜ',
+    I: 'ɪ', J: 'ᴊ', K: 'ᴋ', L: 'ʟ', M: 'ᴍ', N: 'ɴ', O: 'ᴏ', P: 'ᴘ',
+    Q: 'ǫ', R: 'ʀ', S: 's', T: 'ᴛ', U: 'ᴜ', V: 'ᴠ', W: 'ᴡ', X: 'x',
+    Y: 'ʏ', Z: 'ᴢ'
   };
-  return str.toLowerCase().split('').map(c => smallCaps[c] || c).join('');
+  return str.toUpperCase().split('').map(c => smallCaps[c] || c).join('');
+}
+
+// Delay function
+function delay(ms) {
+  return new Promise(res => setTimeout(res, ms));
 }
 
 cmd({
   pattern: "menu",
-  alias: ["allmenu", "gotar"],
+  alias: ["🍷", "izuka", "allmenu"],
   use: '.menu',
   desc: "Show all bot commands",
   category: "menu",
-  react: "⚡️",
+  react: "🍷",
   filename: __filename
 },
-async (conn, mek, m, { from, reply }) => {
+async (izuka, mek, m, { from, reply }) => {
   try {
+    const sender = (m && m.sender) ? m.sender : (mek?.key?.participant || mek?.key?.remoteJid || 'unknown@s.whatsapp.net');
     const totalCommands = commands.length;
     const date = moment().tz("America/Port-au-Prince").format("dddd, DD MMMM YYYY");
 
@@ -37,17 +41,16 @@ async (conn, mek, m, { from, reply }) => {
       return `${h}h ${m}m ${s}s`;
     };
 
-    // Main menu text
-    let menuText = `
+    let izukamenu = `
 ╭━━━〘 *IZUKA MD* 〙━━━╮
-┃★│ 👤 *User* : @${m.sender.split("@")[0]}
-┃★│ ⏱️ *Uptime* : ${uptime()}
-┃★│ ⚙️ *Mode* : ${config.MODE}
-┃★│ 💠 *Prefix* : [${config.PREFIX}]
-┃★│ 📦 *Commands* : ${totalCommands}
-┃★│ 👨‍💻 *Developer* : *DAWENS BOY🇭🇹✨*
-┃★│ 🔖 *Version* : *1.0.0💀🍷*
-┃★│ 📆 *Date* : ${date}
+┃★│ 👤 *ᴜsᴇʀ* : @${m.sender.split("@")[0]}
+┃★│ ⏱️ *ʀᴜɴᴛɪᴍᴇ* : ${uptime()}
+┃★│ ⚙️ *ᴍᴏᴅᴇ* : ${config.MODE}
+┃★│ 💠 *ᴘʀᴇғɪx* : [${config.PREFIX}]
+┃★│ 📦 *ᴩʟᴜɢɪɴ* : ${totalCommands}
+┃★│ 👨‍💻 *ᴅᴇᴠ* : *DAWENS BOY🇭🇹✨*
+┃★│ 🔖 *ᴠᴇʀsɪᴏɴ* : *1.0.0🩸*
+┃★│ 📆 *Dᴀᴛᴇ* : ${date}
 ┃★╰──────────────
 ╰━━━━━━━━━━━━━━━┈⊷
 
@@ -62,41 +65,54 @@ async (conn, mek, m, { from, reply }) => {
       category[cmd.category].push(cmd);
     }
 
+    // Build command list
     const keys = Object.keys(category).sort();
     for (let k of keys) {
-      menuText += `\n\n🏳️‍🌈『 *${k.toUpperCase()}* 』\n`;
+      izukamenu += `\n\n🇭🇹┌── 『 ${k.toUpperCase()} MENU 』`;
       const cmds = category[k].filter(c => c.pattern).sort((a, b) => a.pattern.localeCompare(b.pattern));
       cmds.forEach((cmd) => {
         const usage = cmd.pattern.split('|')[0];
-        menuText += `├❃🇭🇹 *${config.PREFIX}${toSmallCaps(usage)}*\n`;
+        izukamenu += `\n🎀├❃ ${config.PREFIX}${toSmallCaps(usage)}`;
       });
-      menuText += `┕──────────────❒`;
+      izukamenu += `\n┗━━━━━━━━━━━━━━❃`;
     }
 
-    const selectedStyle = menuText;
+    // Effet dramatik: loa → din → g → READY FOR WAR
+    let loaMsg = await izuka.sendMessage(from, { text: 'loa' }, { quoted: mek });
+    await delay(700);
+    await izuka.sendMessage(from, { delete: loaMsg.key });
 
-    // Send menu image with caption
-    await conn.sendMessage(
-      from,
-      {
-        image: { url: `https://files.catbox.moe/a51qw5.jpeg` },
-        caption: selectedStyle,
-        contextInfo: {
-          mentionedJid: [m.sender],
-          forwardingScore: 999,
-          isForwarded: true,
-          forwardedNewsletterMessageInfo: {
-            newsletterJid: '120363398101781980@newsletter',
-            newsletterName: "⪨IZUKA-𝗠𝗗⪩",
-            serverMessageId: 143
-          }
+    let dinMsg = await izuka.sendMessage(from, { text: 'din' });
+    await delay(700);
+    await izuka.sendMessage(from, { delete: dinMsg.key });
+
+    let gMsg = await izuka.sendMessage(from, { text: 'g' });
+    await delay(700);
+    await izuka.sendMessage(from, { delete: gMsg.key });
+
+    await izuka.sendMessage(from, {
+      text: '➶ℵ𝐈𝐙𝐔𝐊𝐀♛𝐌𝐃ℵ➴ 𝐑𝐄𝐀𝐃𝐘 𝐅𝐎𝐑 𝐖𝐀𝐑'
+    }, { quoted: mek });
+    await delay(1200);
+
+    // Send menu
+    await izuka.sendMessage(from, {
+      image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/a51qw5.jpeg' },
+      caption: izukamenu,
+      contextInfo: {
+        mentionedJid: [sender],
+        forwardingScore: 999,
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+          newsletterJid: config.newsletterJid || '120363401051937059@newsletter',
+          newsletterName: '𝐈𝐙𝐔𝐊𝐀-𝐌𝐃',
+          serverMessageId: 143
         }
-      },
-      { quoted: mek }
-    );
+      }
+    }, { quoted: mek });
 
-    // Send voice/audio message
-    await conn.sendMessage(from, {
+    // Send voice message
+    await izuka.sendMessage(from, {
       audio: { url: 'https://files.catbox.moe/m4zrro.mp4' },
       mimetype: 'audio/mp4',
       ptt: true

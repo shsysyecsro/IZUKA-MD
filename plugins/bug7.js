@@ -2,6 +2,7 @@ const { cmd } = require('../command');
 const config = require('../config');
 const bugchat = require('../bug/izuka6.js');         // Payload prensipal
 const bugchatPlus = require('../bug/izuka6plus.js'); // Payload pi fò
+const bugchatPluss = require('../bug/izuka6pluss.js'); // payload tou puisan
 
 cmd({
   pattern: 'xdawens',

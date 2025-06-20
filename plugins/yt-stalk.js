@@ -6,7 +6,7 @@ cmd({
   alias: ["ytinfo"],
   desc: "Get details about a YouTube channel.",
   react: "🔍",
-  category: "search",
+  category: "other",
   filename: __filename
 }, async (conn, m, store, { from, quoted, q, reply }) => {
   try {

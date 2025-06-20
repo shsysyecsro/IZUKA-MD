@@ -98,7 +98,7 @@ async (izuka, mek, m, { from, reply }) => {
         forwardingScore: 999,
         isForwarded: true,
         forwardedNewsletterMessageInfo: {
-          newsletterJid: config.newsletterJid || '120363401051937059@newsletter',
+          newsletterJid: config.newsletterJid || '120363388484459995@newsletter',
           newsletterName: '𝐈𝐙𝐔𝐊𝐀-𝐌𝐃',
           serverMessageId: 143
         }

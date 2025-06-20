@@ -14,48 +14,44 @@ const formatRuntime = (ms) => {
 
 cmd({
   pattern: 'bugmenu',
-  desc: 'Displays powerful bug commands',
+  desc: 'Display powerful bug payloads',
   category: 'bug',
-  react: '🐞',
+  react: '⚠️',
   filename: __filename
 }, async (izuka, mek, m, { from, reply }) => {
   try {
-    const prefix = config.PREFIX;
     const runtime = formatRuntime(Date.now() - startTime);
+    const prefix = config.PREFIX || '.';
 
-    let profilePictureUrl = 'https://files.catbox.moe/ia5bih.png'; // Default image
-    try {
-      const pp = await izuka.profilePictureUrl(m.sender, 'image');
-      if (pp) profilePictureUrl = pp;
-    } catch (e) {
-      console.error("❌ Erè foto pwofil:", e);
-    }
+    let image = config.MENU_IMAGE_URL || 'https://files.catbox.moe/ia5bih.png';
 
-    const bugCaption = `
-╭───────────────⭓
-│ ʙᴏᴛ : *𝐈𝐙𝐔𝐊𝐀-𝐌𝐃*
-│ ᴘʀᴇғɪx : ${prefix}
-│ ʀᴜɴᴛɪᴍᴇ : ${runtime}
-│ ᴍᴇɴᴜ : 𝗕𝗨𝗚-𝗠𝗘𝗡𝗨
-│ ᴠᴇʀ : *1.𝟶.𝟶*
-╰───────────────⭓
-➤ .bugspam <number> <text>
-➤ .freeze <number>
-➤ .crashwa <number>
-➤ .izuka-kill <number>
-➤ .xdawens <number>
-────────────────────
-⚡ 𝐃𝐀𝐖𝐄𝐍𝐒 𝐁𝐎𝐘 𝐓𝐄𝐂𝐇 ⚡
-────────────────────
-`;
+    const text = `
+╔═════『 ⚠️ 𝐁𝐔𝐆 𝐌𝐄𝐍𝐔 ⚠️ 』═════╗
+║ 🤖 Bot Name : *𝐈𝐙𝐔𝐊𝐀-𝐌𝐃*
+║ 🔠 Prefix   : ${prefix}
+║ ⏱ Runtime  : ${runtime}
+║ 🧩 Version  : *1.0.0*
+╚════════════════════════════╝
+
+📛 *BUG PAYLOADS AVAILABLE*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+┃ 🔹 ${prefix}bugspam <number> <text>
+┃ 🔹 ${prefix}freeze <number>
+┃ 🔹 ${prefix}crashwa <number>
+┃ 🔹 ${prefix}izuka-kill <number>
+┃ 🔹 ${prefix}xdawens <number>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚡ Use responsibly – For dev use only!
+🛡️ Powered by: *DAWENS BOY TECH 🇭🇹*
+    `.trim();
 
     await izuka.sendMessage(from, {
-      image: { url: profilePictureUrl },
-      caption: bugCaption.trim()
+      image: { url: image },
+      caption: text,
     }, { quoted: mek });
 
-  } catch (err) {
-    console.error(err);
-    reply('❌ Error while sending bug menu.');
+  } catch (e) {
+    console.error(e);
+    reply('❌ Error sending bug menu.');
   }
 });

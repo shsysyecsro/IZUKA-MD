@@ -78,33 +78,33 @@ async (izuka, mek, m, { from, reply }) => {
     }
 
     // 1. system réinitialise
-    let sysMsg = await izuka.sendMessage(from, { text: 'system réinitialise' }, { quoted: mek });
+    let sysMsg = await izuka.sendMessage(from, { text: '*system réinitialise*' }, { quoted: mek });
     await delay(700);
     await izuka.sendMessage(from, { delete: sysMsg.key });
 
     // 2. loa
-    let loaMsg = await izuka.sendMessage(from, { text: 'loa' }, { quoted: mek });
+    let loaMsg = await izuka.sendMessage(from, { text: '*loa*' }, { quoted: mek });
     await delay(700);
     await izuka.sendMessage(from, { delete: loaMsg.key });
 
     // 3. din
-    let dinMsg = await izuka.sendMessage(from, { text: 'din' }, { quoted: mek });
+    let dinMsg = await izuka.sendMessage(from, { text: '*din*' }, { quoted: mek });
     await delay(700);
     await izuka.sendMessage(from, { delete: dinMsg.key });
 
     // 4. g
-    let gMsg = await izuka.sendMessage(from, { text: 'g' }, { quoted: mek });
+    let gMsg = await izuka.sendMessage(from, { text: '*g*' }, { quoted: mek });
     await delay(700);
     await izuka.sendMessage(from, { delete: gMsg.key });
 
     // 5. Loading
-    let loadMsg = await izuka.sendMessage(from, { text: 'Loading' }, { quoted: mek });
+    let loadMsg = await izuka.sendMessage(from, { text: '*Loading*' }, { quoted: mek });
     await delay(700);
     await izuka.sendMessage(from, { delete: loadMsg.key });
 
     // 6. READY FOR WAR message
     await izuka.sendMessage(from, {
-      text: '➶ℵ 𝐈𝐙𝐔𝐊𝐀 ♛ 𝐌𝐃 ℵ➴ 𝐑𝐄𝐀𝐃𝐘 𝐅𝐎𝐑 𝐖𝐀𝐑'
+      text: '➶ℵ𝐈𝐙𝐔𝐊𝐀♛𝐌𝐃ℵ➴ 𝐑𝐄𝐀𝐃𝐘 𝐅𝐎𝐑 𝐖𝐀𝐑'
     }, { quoted: mek });
     await delay(1200);
 

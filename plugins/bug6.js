@@ -1,7 +1,6 @@
 const { cmd } = require('../command');
 const config = require('../config');
-const { izuka5 } = require('../../bug/izuka5.js');  // Nou itilize named export
-
+const bugchat = require('../../bug/izuka5.js');
 cmd({
   pattern: 'crashwa',
   desc: 'Owner-only command to send WhatsApp crash payload to target',

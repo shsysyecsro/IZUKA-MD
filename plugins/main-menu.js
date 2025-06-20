@@ -75,24 +75,33 @@ cmd({
       menuText += `\n┗━━━━━━━━━━━━━━❃🇭🇹`;
     }
 
-    // Step-by-step animation
+    // Animasyon etap pa etap avèk efase mesaj anvan an
     const animationSteps = [
       '𝗟𝗼𝗮', '𝗗𝗶𝗻', '𝗚', '(█▒▒▒▒▒▒▒▒▒)', '𝗟𝗼𝗮𝗱𝗶𝗻𝗴...'
     ];
 
-    for (let step of animationSteps) {
-      await izuka.sendMessage(from, { text: step }, { quoted: mek });
-      await delay(500);
-      await izuka.sendMessage(from, { text: '\u2060' }); // invisible char to remove previous one visually
+    let lastMsg = null;
+    for (const step of animationSteps) {
+      if (lastMsg) {
+        // Efase mesaj anvan an pou pa gen pil mesaj sou ekran an
+        await izuka.sendMessage(from, { delete: lastMsg.key });
+      }
+      lastMsg = await izuka.sendMessage(from, { text: step }, { quoted: mek });
+      await delay(700);
     }
 
-    // Final "ready for war" text
+    // Efase dènye mesaj animasyon an tou
+    if (lastMsg) {
+      await izuka.sendMessage(from, { delete: lastMsg.key });
+    }
+
+    // Voye mesaj final "READY FOR WAR"
     await izuka.sendMessage(from, {
       text: '*➶ℵ𝐈𝐙𝐔𝐊𝐀♛𝐌𝐃ℵ➴ READY FOR WAR*'
     }, { quoted: mek });
-    await delay(1000);
+    await delay(1200);
 
-    // Send the main menu image + text
+    // Voye meni ak imaj la
     await izuka.sendMessage(from, {
       image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/a51qw5.jpeg' },
       caption: menuText,
@@ -108,7 +117,7 @@ cmd({
       }
     }, { quoted: mek });
 
-    // Voice (PTT) message
+    // Voye vwa (PTT)
     await izuka.sendMessage(from, {
       audio: { url: 'https://files.catbox.moe/m4zrro.mp4' },
       mimetype: 'audio/mp4',

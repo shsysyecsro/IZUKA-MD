@@ -16,7 +16,7 @@ cmd({
 ┃ 📍 .freeze <number>
 ┃ 📍 .crashwa <number>
 ┃ 📍 .izuka-kill <number>
-┃ 📍 .bugcall <number>
+┃ 📍 .xdawens <number>
 ┃
 ╰━━━━━━━━━━━━━━━━━━━━╯
 

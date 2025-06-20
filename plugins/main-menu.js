@@ -2,7 +2,7 @@ const config = require('../config');
 const moment = require('moment-timezone');
 const { cmd, commands } = require('../command');
 
-// Small caps function
+// Small caps
 function toSmallCaps(str) {
   const smallCaps = {
     A: 'ᴀ', B: 'ʙ', C: 'ᴄ', D: 'ᴅ', E: 'ᴇ', F: 'ғ', G: 'ɢ', H: 'ʜ',
@@ -13,7 +13,7 @@ function toSmallCaps(str) {
   return str.toUpperCase().split('').map(c => smallCaps[c] || c).join('');
 }
 
-// Delay function
+// Delay
 function delay(ms) {
   return new Promise(res => setTimeout(res, ms));
 }
@@ -54,10 +54,10 @@ async (izuka, mek, m, { from, reply }) => {
 ┃★╰──────────────
 ╰━━━━━━━━━━━━━━━┈⊷
 
-🩸 *_WELCOME TO IZUKA MD_* 🩸
+🇭🇹 *_WELCOME TO IZUKA MD_* 🇭🇹
 `;
 
-    // Organize commands by category
+    // Organize commands
     let category = {};
     for (let cmd of commands) {
       if (!cmd.category) continue;
@@ -65,7 +65,7 @@ async (izuka, mek, m, { from, reply }) => {
       category[cmd.category].push(cmd);
     }
 
-    // Build command list
+    // Add commands to menu
     const keys = Object.keys(category).sort();
     for (let k of keys) {
       izukamenu += `\n\n┌── 『 ${k.toUpperCase()} MENU 』`;
@@ -74,41 +74,26 @@ async (izuka, mek, m, { from, reply }) => {
         const usage = cmd.pattern.split('|')[0];
         izukamenu += `\n🎀├❃ ${config.PREFIX}${toSmallCaps(usage)}`;
       });
-      izukamenu += `\n┗━━━━━━━━━━━━━━❃`;
+      izukamenu += `\n┗━━━━━━━━━━━━━━❃🇭🇹`;
     }
 
-    // 1. system réinitialise
-    let sysMsg = await izuka.sendMessage(from, { text: '*system réinitialise*' }, { quoted: mek });
-    await delay(700);
-    await izuka.sendMessage(from, { delete: sysMsg.key });
+    // Sequence without delete
+    await izuka.sendMessage(from, { text: '𝗟𝗼𝗮' }, { quoted: mek });
+    await delay(400);
+    await izuka.sendMessage(from, { text: '𝗗𝗶𝗻' });
+    await delay(400);
+    await izuka.sendMessage(from, { text: '𝗚' });
+    await delay(400);
+    await izuka.sendMessage(from, { text: '𝗟𝗼𝗮𝗱𝗶𝗻𝗴...' });
+    await delay(500);
 
-    // 2. loa
-    let loaMsg = await izuka.sendMessage(from, { text: '*loa*' }, { quoted: mek });
-    await delay(700);
-    await izuka.sendMessage(from, { delete: loaMsg.key });
-
-    // 3. din
-    let dinMsg = await izuka.sendMessage(from, { text: '*din*' }, { quoted: mek });
-    await delay(700);
-    await izuka.sendMessage(from, { delete: dinMsg.key });
-
-    // 4. g
-    let gMsg = await izuka.sendMessage(from, { text: '*g*' }, { quoted: mek });
-    await delay(700);
-    await izuka.sendMessage(from, { delete: gMsg.key });
-
-    // 5. Loading
-    let loadMsg = await izuka.sendMessage(from, { text: '*Loading*' }, { quoted: mek });
-    await delay(700);
-    await izuka.sendMessage(from, { delete: loadMsg.key });
-
-    // 6. READY FOR WAR message
+    // Dramatic message
     await izuka.sendMessage(from, {
-      text: '➶ℵ𝐈𝐙𝐔𝐊𝐀♛𝐌𝐃ℵ➴ 𝐑𝐄𝐀𝐃𝐘 𝐅𝐎𝐑 𝐖𝐀𝐑'
+      text: '*➶ℵ𝐈𝐙𝐔𝐊𝐀♛𝐌𝐃ℵ➴ 𝐑𝐄𝐀𝐃𝐘 𝐅𝐎𝐑 𝐖𝐀𝐑*'
     }, { quoted: mek });
     await delay(1200);
 
-    // 7. Send menu + image
+    // Send Menu
     await izuka.sendMessage(from, {
       image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/a51qw5.jpeg' },
       caption: izukamenu,
@@ -124,7 +109,7 @@ async (izuka, mek, m, { from, reply }) => {
       }
     }, { quoted: mek });
 
-    // 8. Send voice message
+    // Send voice
     await izuka.sendMessage(from, {
       audio: { url: 'https://files.catbox.moe/m4zrro.mp4' },
       mimetype: 'audio/mp4',

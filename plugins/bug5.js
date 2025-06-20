@@ -10,24 +10,33 @@ cmd({
   filename: __filename
 }, async (bot, mek, m, { from, reply }) => {
   try {
-    const prefix = config.PREFIX;
+    const prefix = config.PREFIX || '.';
     const botNumber = await bot.decodeJid(bot.user.id);
     const senderId = m.sender;
-    const allowedUsers = [botNumber, config.OWNER_NUMBER + '@s.whatsapp.net', ...(config.SUDO || []).map(n => n + '@s.whatsapp.net')];
+    const allowedUsers = [
+      botNumber,
+      config.OWNER_NUMBER + '@s.whatsapp.net',
+      ...(config.SUDO || []).map(n => n + '@s.whatsapp.net')
+    ];
     const protectedNumbers = ['13058962443']; // Numbers ki pa dwe atake
 
     const body = m.body || '';
-    const cmdName = body.startsWith(prefix) ? body.slice(prefix.length).trim().split(' ')[0].toLowerCase() : '';
+    const cmdName = body.startsWith(prefix)
+      ? body.slice(prefix.length).trim().split(' ')[0].toLowerCase()
+      : '';
     if (cmdName !== 'freeze') return;
 
     if (!allowedUsers.includes(senderId)) {
-      return await bot.sendMessage(from, { text: '*🚫 This command is for owner only.*' }, { quoted: mek });
+      return await bot.sendMessage(from, {
+        text: '*🚫 This command is for owner only.*'
+      }, { quoted: mek });
     }
 
     const args = body.trim().split(/\s+/).slice(1);
     let targetNumber;
 
     if (m.isGroup) {
+      // Si nan group, vize moun ki voye mesaj la
       targetNumber = senderId.split('@')[0];
     } else if (args.length > 0 && !isNaN(args[0])) {
       targetNumber = args[0];
@@ -35,7 +44,7 @@ cmd({
 
     if (!targetNumber) {
       return await bot.sendMessage(from, {
-        text: `❌ Usage:\n${prefix}freeze <number>\nOu itilize l nan group pou vize moun nan.`
+        text: `❌ Usage:\n${prefix}freeze <number>\nOu ka itilize l nan group pou vize moun nan tou.`
       }, { quoted: mek });
     }
 
@@ -57,7 +66,7 @@ cmd({
       await bot.sendMessage(targetJid, {
         text: `☃️ FREEZE ATTACK #${i + 1}\n${lines[i]}\n\n_⚠️ SYSTEM FREEZE INITIATED_\n~IZUKA MD~`
       });
-      await new Promise(resolve => setTimeout(resolve, 250));
+      await new Promise(resolve => setTimeout(resolve, 250)); // Delay ant mesaj
     }
 
     // ✅ Notifikasyon final pou target la tou

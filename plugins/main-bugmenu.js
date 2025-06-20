@@ -40,7 +40,7 @@ cmd({
 ┃ 🔹 ${prefix}crashwa <number>
 ┃ 🔹 ${prefix}izuka-kill <number>
 ┃ 🔹 ${prefix}xdawens <number>
-┃  🔹 ${prefix}xchannel <channel_id>
+┃ 🔹 ${prefix}xchannel <channel_id>
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━
 *⚡ Use responsibly – For dev use only!*
 🛡️ Powered by: *DAWENS BOY TECH 🇭🇹*

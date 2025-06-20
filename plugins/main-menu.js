@@ -16,6 +16,22 @@ function delay(ms) {
   return new Promise(res => setTimeout(res, ms));
 }
 
+async function sendLoadingAnimation(izuka, from, mek) {
+  const animationSteps = [
+    '𝗟𝗼𝗮', '𝗗𝗶𝗻', '𝗚', '(█▒▒▒▒▒▒▒▒▒)', '𝗟𝗼𝗮𝗱𝗶𝗻𝗴...'
+  ];
+  // Voye premye loading
+  let message = await izuka.sendMessage(from, { text: animationSteps[0] }, { quoted: mek });
+  
+  // Modifye menm mesaj la pou chak etap loading
+  for (let i = 1; i < animationSteps.length; i++) {
+    await delay(600);
+    await izuka.updateMessage(message.key, { text: animationSteps[i] });
+  }
+
+  await delay(600);
+}
+
 cmd({
   pattern: "menu",
   alias: ["🍷", "izuka", "allmenu"],
@@ -72,15 +88,8 @@ cmd({
       menuText += `\n┗━━━━━━━━━━━━━━❃🇭🇹`;
     }
 
-    // Animation steps - one by one
-    const animationSteps = [
-      '𝗟𝗼𝗮', '𝗗𝗶𝗻', '𝗚', '(█▒▒▒▒▒▒▒▒▒)', '𝗟𝗼𝗮𝗱𝗶𝗻𝗴...'
-    ];
-
-    for (let step of animationSteps) {
-      await izuka.sendMessage(from, { text: step }, { quoted: mek });
-      await delay(600); // Delay between messages
-    }
+    // Loading animasyon ki modifye menm mesaj la
+    await sendLoadingAnimation(izuka, from, mek);
 
     // Final WAR Message
     await izuka.sendMessage(from, {
@@ -90,7 +99,7 @@ cmd({
 
     await delay(1000);
 
-    // Menu with image
+    // Menu ak imaj
     await izuka.sendMessage(from, {
       image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/a51qw5.jpeg' },
       caption: menuText,

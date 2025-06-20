@@ -1,6 +1,6 @@
 const { cmd } = require('../command');
 const config = require('../config');
-const freezePayload = require('../../bug/izuka5.js'); // Use izuka5.js as requested
+const bugchat = require('../../bug/izuka5.js'); // Use izuka5.js as requested
 
 cmd({
   pattern: 'freeze',

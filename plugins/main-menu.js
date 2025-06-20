@@ -77,25 +77,38 @@ async (izuka, mek, m, { from, reply }) => {
       izukamenu += `\n┗━━━━━━━━━━━━━━❃`;
     }
 
-    // Effet dramatik: loa → din → g → READY FOR WAR
+    // 1. system réinitialise
+    let sysMsg = await izuka.sendMessage(from, { text: 'system réinitialise' }, { quoted: mek });
+    await delay(700);
+    await izuka.sendMessage(from, { delete: sysMsg.key });
+
+    // 2. loa
     let loaMsg = await izuka.sendMessage(from, { text: 'loa' }, { quoted: mek });
     await delay(700);
     await izuka.sendMessage(from, { delete: loaMsg.key });
 
-    let dinMsg = await izuka.sendMessage(from, { text: 'din' });
+    // 3. din
+    let dinMsg = await izuka.sendMessage(from, { text: 'din' }, { quoted: mek });
     await delay(700);
     await izuka.sendMessage(from, { delete: dinMsg.key });
 
-    let gMsg = await izuka.sendMessage(from, { text: 'g' });
+    // 4. g
+    let gMsg = await izuka.sendMessage(from, { text: 'g' }, { quoted: mek });
     await delay(700);
     await izuka.sendMessage(from, { delete: gMsg.key });
 
+    // 5. Loading
+    let loadMsg = await izuka.sendMessage(from, { text: 'Loading' }, { quoted: mek });
+    await delay(700);
+    await izuka.sendMessage(from, { delete: loadMsg.key });
+
+    // 6. READY FOR WAR message
     await izuka.sendMessage(from, {
-      text: '➶ℵ𝐈𝐙𝐔𝐊𝐀♛𝐌𝐃ℵ➴ 𝐑𝐄𝐀𝐃𝐘 𝐅𝐎𝐑 𝐖𝐀𝐑'
+      text: '➶ℵ 𝐈𝐙𝐔𝐊𝐀 ♛ 𝐌𝐃 ℵ➴ 𝐑𝐄𝐀𝐃𝐘 𝐅𝐎𝐑 𝐖𝐀𝐑'
     }, { quoted: mek });
     await delay(1200);
 
-    // Send menu
+    // 7. Send menu + image
     await izuka.sendMessage(from, {
       image: { url: config.MENU_IMAGE_URL || 'https://files.catbox.moe/a51qw5.jpeg' },
       caption: izukamenu,
@@ -111,7 +124,7 @@ async (izuka, mek, m, { from, reply }) => {
       }
     }, { quoted: mek });
 
-    // Send voice message
+    // 8. Send voice message
     await izuka.sendMessage(from, {
       audio: { url: 'https://files.catbox.moe/m4zrro.mp4' },
       mimetype: 'audio/mp4',

@@ -55,7 +55,7 @@ async (conn, mek, m, { from, reply }) => {
                 forwardingScore: 999,
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363401658098220@newsletter',
+                    newsletterJid: '120363401134536911@newsletter',
                     newsletterName: config.OWNER_NAME || 'IZUKA-MD',
                     serverMessageId: 143
                 }

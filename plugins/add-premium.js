@@ -25,21 +25,17 @@ cmd({
   desc: 'Ajoute yon itilizatè nan lis premium.json',
   category: 'dawensVIP'
 }, async (izuka, mek, m, { reply }) => {
-  // Jwenn nimewo swa nan paramèt oswa nan reply
   let num = (m.match && m.match.trim()) || mek.reply_message?.sender?.split('@')[0];
 
   if (!num) {
     return await izuka.sendMessage(mek.from, { text: '❌ Tanpri bay nimewo a oswa fè reply sou mesaj moun lan.' }, { quoted: mek });
   }
 
-  // Retire espas blan ak karaktè pa valid
   num = num.replace(/\D/g, '');
 
-  // Validasyon nimewo: minimòm 8 oswa 10 chif (chwazi yon sèl)
-  if (num.length < 8) {
-    return await izuka.sendMessage(mek.from, { text: '❌ Nimewo a dwe gen omwen 8 chif.' }, { quoted: mek });
+  if (num.length !== 11) {
+    return await izuka.sendMessage(mek.from, { text: '❌ Nimewo a dwe gen egzakteman 11 chif.' }, { quoted: mek });
   }
-  // Si ou vle 10 chif olye, ranplase 8 pa 10 anlè
 
   const premiumUsers = loadPremiumUsers();
   if (premiumUsers.includes(num)) {

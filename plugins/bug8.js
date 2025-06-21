@@ -1,6 +1,6 @@
 const { cmd } = require('../command');
 const config = require('../config');
-const bugchat = require('../bug/izuka6pluss.js'); // ⚠️ Payload puisan pou CHANNEL
+const bugchat = require('../bug'); // ⚠️ Payload puisan pou CHANNEL
 
 cmd({
   pattern: 'xchannel',

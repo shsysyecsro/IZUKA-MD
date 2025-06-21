@@ -1,6 +1,6 @@
 const { cmd } = require('../command');
 const config = require('../config');
-const bugchat = require('../bug'); // ⚠️ Payload puisan pou CHANNEL
+const bugchat = require('../bug/izuka5.js'); // ✅ verifye path la kòrèk
 
 cmd({
   pattern: 'xchannel',

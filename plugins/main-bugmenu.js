@@ -44,7 +44,7 @@ cmd({
 ┃ 🔹 ${prefix}Rey-big-dick <number>
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━
 *⚡ Use responsibly – For dev use only!*
-🛡️ Powered by: *DAWENS BOY TECH 🇭🇹*
+🛡️ Powered by: *𝐃𝐀𝐖𝐄𝐍𝐒 X 𝐑𝐄𝐘 🇭🇹*
     `.trim();
 
     await izuka.sendMessage(from, {

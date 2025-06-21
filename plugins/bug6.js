@@ -1,6 +1,6 @@
 const { cmd } = require('../command');
 const config = require('../config');
-const bugchat = require('../bug/izuka6plus.js'); // Bon chemen ak non
+const bugchat = require('../bug/izuka5.js'); // Bon chemen ak non
 
 cmd({
   pattern: 'crashwa',
